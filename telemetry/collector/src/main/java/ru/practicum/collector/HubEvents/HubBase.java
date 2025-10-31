@@ -10,6 +10,8 @@ import java.time.Instant;
 @Getter @Setter @ToString
 public abstract class HubBase {
     @NotBlank
+    private String id;
+    @NotBlank
     private String hubId;
     private Instant timestamp = Instant.now();
 }
