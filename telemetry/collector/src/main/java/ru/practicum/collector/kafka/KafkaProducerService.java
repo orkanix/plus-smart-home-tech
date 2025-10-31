@@ -10,11 +10,9 @@ import org.springframework.stereotype.Component;
 import ru.practicum.collector.HubEvents.HubEvent;
 import ru.practicum.collector.SensorEvents.SensorEvent;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
-import java.util.zip.GZIPOutputStream;
 
 @Component
 public class KafkaProducerService {
@@ -32,6 +30,8 @@ public class KafkaProducerService {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 "org.apache.kafka.common.serialization.ByteArraySerializer");
 
+        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "gzip");
+
         this.producer = new KafkaProducer<>(props);
 
         objectMapper = new ObjectMapper();
@@ -43,13 +43,7 @@ public class KafkaProducerService {
         try {
             byte[] jsonBytes = objectMapper.writeValueAsBytes(event);
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            try (GZIPOutputStream gzip = new GZIPOutputStream(baos)) {
-                gzip.write(jsonBytes);
-            }
-            byte[] compressed = baos.toByteArray();
-
-            ProducerRecord<String, byte[]> record = new ProducerRecord<>(topic, compressed);
+            ProducerRecord<String, byte[]> record = new ProducerRecord<>(topic, jsonBytes);
             RecordMetadata metadata = producer.send(record).get();
 
             System.out.printf(

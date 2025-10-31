@@ -19,6 +19,7 @@ public class CollectorController {
 
     @PostMapping("/sensors")
     public void collectSensorEvent(@Valid @RequestBody SensorEvent sensorEvent) {
+        System.out.println(sensorEvent.getType());
         service.sendSensorEvent(sensorEvent);
     }
 
