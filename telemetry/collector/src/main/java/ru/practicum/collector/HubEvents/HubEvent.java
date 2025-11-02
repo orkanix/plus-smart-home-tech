@@ -2,10 +2,13 @@ package ru.practicum.collector.HubEvents;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.Instant;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -20,7 +23,11 @@ import lombok.ToString;
         @JsonSubTypes.Type(value = ScenarioRemovedEvent.class, name = "SCENARIO_REMOVE_EVENT"),
 })
 @Getter @Setter @ToString(callSuper = true)
-public abstract class HubEvent extends HubBase {
+public abstract class HubEvent {
+    @NotBlank
+    private String hubId;
+    private Instant timestamp = Instant.now();
+
     @NotNull
     public abstract HubEventType getType();
 }

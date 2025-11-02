@@ -1,24 +1,23 @@
 package ru.practicum.collector;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.collector.HubEvents.HubEvent;
-import ru.practicum.collector.SensorEvents.SensorEvent;
-import ru.practicum.collector.kafka.KafkaProducerService;
+import ru.practicum.collector.SensorEvents.*;
+import ru.practicum.collector.kafka.producer.KafkaEventProducer;
+import ru.practicum.collector.kafka.mapper.sensor.*;
 
 @Service
+@RequiredArgsConstructor
 public class CollectorService {
 
-    private final KafkaProducerService kafkaProducerService;
+    private final KafkaEventProducer kafkaEventProducer;
 
-    public CollectorService(KafkaProducerService kafkaProducerService) {
-        this.kafkaProducerService = kafkaProducerService;
+    public void sendSensorEvent(SensorEvent event) {
+        kafkaEventProducer.sendSensorEvent(event);
     }
 
     public void sendHubEvent(HubEvent event) {
-        kafkaProducerService.sendHubEvent(event);
-    }
-
-    public void sendSensorEvent(SensorEvent event) {
-        kafkaProducerService.sendSensorEvent(event);
+        kafkaEventProducer.sendHubEvent(event);
     }
 }

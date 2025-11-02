@@ -5,9 +5,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString(callSuper = true)
-public class ScenarioCondition extends HubBase{
+public class ScenarioCondition{
     private String sensor_id;
-    private ConditionType type;
+    private ConditionType conditionType;
     private ConditionOperation operation;
     private Integer value = null;
 }

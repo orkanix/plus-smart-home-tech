@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter @Setter @ToString(callSuper = true)
 public class DeviceAddedEvent extends HubEvent{
     private String id;
-    private DeviceType type;
+    private DeviceType deviceType;
 
     @Override
     public HubEventType getType() {
