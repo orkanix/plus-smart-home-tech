@@ -25,7 +25,9 @@ import java.time.Instant;
 })
 @Getter @Setter @ToString
 public abstract class SensorEvent {
+    @NotBlank
     private String id;
+    @NotBlank
     private String hubId;
     private Instant timestamp = Instant.now();
 
