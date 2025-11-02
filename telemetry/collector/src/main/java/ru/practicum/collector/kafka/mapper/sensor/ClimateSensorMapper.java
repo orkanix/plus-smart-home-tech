@@ -14,9 +14,9 @@ public class ClimateSensorMapper implements AvroMapper<ClimateSensor, ClimateSen
     public ClimateSensorAvro toAvro(ClimateSensor javaObject) {
 
         return ClimateSensorAvro.newBuilder()
-                .setCo2Level(javaObject.getCo2_level())
+                .setCo2Level(javaObject.getCo2Level())
                 .setHumidity(javaObject.getHumidity())
-                .setTemperatureC(javaObject.getTemperature_c())
+                .setTemperatureC(javaObject.getTemperatureC())
                 .build();
     }
 }

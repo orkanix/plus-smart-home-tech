@@ -15,7 +15,7 @@ public class MotionSensorMapper implements AvroMapper<MotionSensor, MotionSensor
 
         return MotionSensorAvro.newBuilder()
                 .setMotion(javaObject.isMotion())
-                .setLinkQuality(javaObject.getLink_quality())
+                .setLinkQuality(javaObject.getLinkQuality())
                 .setVoltage(javaObject.getVoltage())
                 .build();
     }
