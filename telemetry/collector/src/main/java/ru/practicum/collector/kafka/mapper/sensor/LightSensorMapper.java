@@ -14,7 +14,7 @@ public class LightSensorMapper implements AvroMapper<LightSensor, LightSensorAvr
     public LightSensorAvro toAvro(LightSensor javaObject) {
 
         return LightSensorAvro.newBuilder()
-                .setLinkQuality(javaObject.getLink_quality())
+                .setLinkQuality(javaObject.getLinkQuality())
                 .setLuminosity(javaObject.getLuminosity())
                 .build();
     }

@@ -14,8 +14,8 @@ public class TemperatureSensorMapper implements AvroMapper<TemperatureSensor, Te
     public TemperatureSensorAvro toAvro(TemperatureSensor javaObject) {
 
         return TemperatureSensorAvro.newBuilder()
-                .setTemperatureC(javaObject.getTemperature_c())
-                .setTemperatureF(javaObject.getTemperature_f())
+                .setTemperatureC(javaObject.getTemperatureC())
+                .setTemperatureF(javaObject.getTemperatureF())
                 .build();
     }
 }
