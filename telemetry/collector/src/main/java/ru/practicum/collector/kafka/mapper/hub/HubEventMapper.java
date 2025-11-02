@@ -1,6 +1,7 @@
 package ru.practicum.collector.kafka.mapper.hub;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Component;
 import ru.practicum.collector.HubEvents.*;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
@@ -18,7 +19,7 @@ public class HubEventMapper implements AvroMapper<HubEvent, HubEventAvro> {
     @Override
     public HubEventAvro toAvro(HubEvent javaObject) {
 
-        Object payload = createPayload(javaObject);
+        SpecificRecord payload = createPayload(javaObject);
 
         return HubEventAvro.newBuilder()
                 .setHubId(javaObject.getHubId())
@@ -27,7 +28,7 @@ public class HubEventMapper implements AvroMapper<HubEvent, HubEventAvro> {
                 .build();
     }
 
-    private Object createPayload(HubEvent hubEvent) {
+    private SpecificRecord createPayload(HubEvent hubEvent) {
         return switch (hubEvent.getType()) {
             case DEVICE_ADDED_EVENT -> deviceAddedEventMapper.toAvro((DeviceAddedEvent) hubEvent);
             case DEVICE_REMOVE_EVENT -> deviceRemovedEventMapper.toAvro((DeviceRemovedEvent) hubEvent);

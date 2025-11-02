@@ -2,6 +2,7 @@ package ru.practicum.collector.kafka.mapper.sensor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Component;
 import ru.practicum.collector.SensorEvents.*;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
@@ -21,7 +22,7 @@ public class SensorEventMapper implements AvroMapper<SensorEvent, SensorEventAvr
     @Override
     public SensorEventAvro toAvro(SensorEvent javaObject) {
 
-        Object payloadObject = createPayload(javaObject);
+        SpecificRecord payloadObject = createPayload(javaObject);
 
         return SensorEventAvro.newBuilder()
                 .setHubId(javaObject.getHubId())
@@ -31,7 +32,7 @@ public class SensorEventMapper implements AvroMapper<SensorEvent, SensorEventAvr
                 .build();
     }
 
-    private Object createPayload(SensorEvent sensorEvent) {
+    private SpecificRecord createPayload(SensorEvent sensorEvent) {
         return switch (sensorEvent.getType()) {
             case CLIMATE_SENSOR_EVENT -> climateSensorMapper.toAvro((ClimateSensor) sensorEvent);
             case LIGHT_SENSOR_EVENT -> lightSensorMapper.toAvro((LightSensor) sensorEvent);
