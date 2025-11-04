@@ -17,10 +17,10 @@ import java.time.Instant;
         visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = DeviceAddedEvent.class, name = "DEVICE_ADDED_EVENT"),
-        @JsonSubTypes.Type(value = DeviceRemovedEvent.class, name = "DEVICE_REMOVE_EVENT"),
-        @JsonSubTypes.Type(value = ScenarioAddedEvent.class, name = "SCENARIO_ADDED_EVENT"),
-        @JsonSubTypes.Type(value = ScenarioRemovedEvent.class, name = "SCENARIO_REMOVE_EVENT"),
+        @JsonSubTypes.Type(value = DeviceAddedEvent.class, name = "DEVICE_ADDED"),
+        @JsonSubTypes.Type(value = DeviceRemovedEvent.class, name = "DEVICE_REMOVE"),
+        @JsonSubTypes.Type(value = ScenarioAddedEvent.class, name = "SCENARIO_ADDED"),
+        @JsonSubTypes.Type(value = ScenarioRemovedEvent.class, name = "SCENARIO_REMOVE"),
 })
 @Getter @Setter @ToString(callSuper = true)
 public abstract class HubEvent {

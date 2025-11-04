@@ -1,8 +1,6 @@
 package ru.practicum.collector.kafka.mapper.hub;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.HubEvents.ConditionOperation;
-import ru.practicum.collector.HubEvents.ScenarioAddedEvent;
 import ru.practicum.collector.HubEvents.ScenarioCondition;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.ConditionOperationAvro;
@@ -16,14 +14,14 @@ public class ScenarioConditionMapper implements AvroMapper<ScenarioCondition, Sc
     public ScenarioConditionAvro toAvro(ScenarioCondition javaObject) {
         return ScenarioConditionAvro.newBuilder()
                 .setValue(javaObject.getValue())
-                .setSensorId(javaObject.getSensor_id())
+                .setSensorId(javaObject.getSensorId())
                 .setType(getType(javaObject))
                 .setOperation(getCondition(javaObject))
                 .build();
     }
 
     private ConditionTypeAvro getType(ScenarioCondition javaObject) {
-        return switch (javaObject.getConditionType()) {
+        return switch (javaObject.getType()) {
             case MOTION -> ConditionTypeAvro.MOTION;
             case LUMINOSITY -> ConditionTypeAvro.LUMINOSITY;
             case SWITCH -> ConditionTypeAvro.SWITCH;
