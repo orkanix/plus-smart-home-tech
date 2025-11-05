@@ -1,7 +1,7 @@
 package ru.practicum.collector.kafka.mapper.hub;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.HubEvents.DeviceAddedEvent;
+import ru.practicum.collector.events.hub.DeviceAddedEvent;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;

@@ -1,4 +1,4 @@
-package ru.practicum.collector.HubEvents;
+package ru.practicum.collector.events.hub;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,9 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Getter @Setter @ToString(callSuper = true)
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class ScenarioAddedEvent extends HubEvent {
     private String name;
     private List<ScenarioCondition> conditions;

@@ -1,4 +1,4 @@
-package ru.practicum.collector;
+package ru.practicum.collector.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.collector.HubEvents.HubEvent;
-import ru.practicum.collector.SensorEvents.SensorEvent;
+import ru.practicum.collector.service.CollectorService;
+import ru.practicum.collector.events.hub.HubEvent;
+import ru.practicum.collector.events.sensor.SensorEvent;
 
 @RestController
 @RequestMapping("/events")

@@ -1,11 +1,10 @@
-package ru.practicum.collector;
+package ru.practicum.collector.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.collector.HubEvents.HubEvent;
-import ru.practicum.collector.SensorEvents.*;
+import ru.practicum.collector.events.hub.HubEvent;
+import ru.practicum.collector.events.sensor.SensorEvent;
 import ru.practicum.collector.kafka.producer.KafkaEventProducer;
-import ru.practicum.collector.kafka.mapper.sensor.*;
 
 @Service
 @RequiredArgsConstructor

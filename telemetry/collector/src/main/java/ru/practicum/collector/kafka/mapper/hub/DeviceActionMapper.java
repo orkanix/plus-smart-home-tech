@@ -2,7 +2,7 @@ package ru.practicum.collector.kafka.mapper.hub;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.HubEvents.DeviceAction;
+import ru.practicum.collector.events.hub.DeviceAction;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.ActionTypeAvro;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceActionAvro;

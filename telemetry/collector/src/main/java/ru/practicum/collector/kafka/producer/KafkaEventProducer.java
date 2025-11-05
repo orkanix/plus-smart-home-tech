@@ -1,66 +1,51 @@
 package ru.practicum.collector.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
-import ru.practicum.collector.HubEvents.HubEvent;
-import ru.practicum.collector.SensorEvents.SensorEvent;
-import ru.practicum.collector.kafka.AvroSerializer;
-import ru.practicum.collector.kafka.mapper.AvroMapper;
+import org.springframework.stereotype.Component;
+import ru.practicum.collector.events.hub.HubEvent;
+import ru.practicum.collector.events.sensor.SensorEvent;
 import ru.practicum.collector.kafka.mapper.hub.HubEventMapper;
 import ru.practicum.collector.kafka.mapper.sensor.SensorEventMapper;
 
-import java.io.IOException;
+import java.time.Instant;
 
-@Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class KafkaEventProducer {
 
-    private final KafkaTemplate<String, byte[]> kafkaTemplate;
-    private final AvroSerializer avroSerializer;
-
-    private final SensorEventMapper sensorEventMapper;
+    protected final KafkaTemplate<String, SpecificRecordBase> producer;
     private final HubEventMapper hubEventMapper;
+    private final SensorEventMapper sensorEventMapper;
 
-    public <T, A extends SpecificRecordBase> void sendEvent(
-            T javaObject,
-            AvroMapper<T, A> mapper,
-            String topic) {
-        try {
-            A avroObject = mapper.toAvro(javaObject);
+    @Value("${spring.kafka.topics.hub-topic-name}")
+    private String hubTopic;
+    @Value("${spring.kafka.topics.sensor-topic-name}")
+    private String sensorTopic;
 
-            byte[] avroBytes = avroSerializer.serialize(avroObject);
+    private void send(SpecificRecordBase event, String hubId, Instant timestamp, String topic) {
+        ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(
+                topic,
+                null,
+                timestamp.toEpochMilli(),
+                hubId,
+                event
+        );
 
-            kafkaTemplate.send(topic, avroBytes)
-                    .whenComplete((result, exception) -> {
-                        if (exception != null) {
-                            log.error("Ошибка отправки события в Kafka топик {}: {}",
-                                    topic, exception.getMessage(), exception);
-                        } else {
-                            log.info("Событие успешно отправлено в топик: {}, партиция: {}, offset: {}",
-                                    result.getRecordMetadata().topic(),
-                                    result.getRecordMetadata().partition(),
-                                    result.getRecordMetadata().offset());
-                        }
-                    });
-
-        } catch (IOException e) {
-            log.error("Ошибка сериализации события: {}", e.getMessage(), e);
-            throw new RuntimeException("Не удалось сериализовать событие", e);
-        }
-    }
-
-    public void sendSensorEvent(SensorEvent sensorEvent) {
-        String sensorsTopic = "telemetry.sensors.v1";
-        sendEvent(sensorEvent, sensorEventMapper, sensorsTopic);
-        log.info("Сообщение успешно отправлено!");
+        producer.send(record);
+        producer.flush();
     }
 
     public void sendHubEvent(HubEvent hubEvent) {
-        String hubsTopic = "telemetry.hubs.v1";
-        sendEvent(hubEvent, hubEventMapper, hubsTopic);
+        SpecificRecordBase hubEventAvro = hubEventMapper.toAvro(hubEvent);
+        send(hubEventAvro, hubEvent.getHubId(), hubEvent.getTimestamp(), hubTopic);
+    }
+
+    public void sendSensorEvent(SensorEvent sensorEvent) {
+        SpecificRecordBase sensorEventAvro = sensorEventMapper.toAvro(sensorEvent);
+        send(sensorEventAvro, sensorEvent.getHubId(), sensorEvent.getTimestamp(), sensorTopic);
     }
 }

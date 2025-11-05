@@ -1,4 +1,4 @@
-package ru.practicum.collector.SensorEvents;
+package ru.practicum.collector.events.sensor;
 
 public enum SensorEventType {
     CLIMATE_SENSOR_EVENT,

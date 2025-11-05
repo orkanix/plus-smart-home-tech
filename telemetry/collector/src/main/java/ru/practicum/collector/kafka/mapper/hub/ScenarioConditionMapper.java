@@ -1,7 +1,7 @@
 package ru.practicum.collector.kafka.mapper.hub;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.HubEvents.ScenarioCondition;
+import ru.practicum.collector.events.hub.ScenarioCondition;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.ConditionOperationAvro;
 import ru.yandex.practicum.kafka.telemetry.event.ConditionTypeAvro;
@@ -21,7 +21,7 @@ public class ScenarioConditionMapper implements AvroMapper<ScenarioCondition, Sc
     }
 
     private ConditionTypeAvro getType(ScenarioCondition javaObject) {
-        return switch (javaObject.getType()) {
+        return switch (javaObject.getConditionType()) {
             case MOTION -> ConditionTypeAvro.MOTION;
             case LUMINOSITY -> ConditionTypeAvro.LUMINOSITY;
             case SWITCH -> ConditionTypeAvro.SWITCH;

@@ -2,7 +2,7 @@ package ru.practicum.collector.kafka.mapper.hub;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.HubEvents.ScenarioAddedEvent;
+import ru.practicum.collector.events.hub.ScenarioAddedEvent;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceActionAvro;
 import ru.yandex.practicum.kafka.telemetry.event.ScenarioAddedEventAvro;

@@ -3,7 +3,7 @@ package ru.practicum.collector.kafka.mapper.hub;
 import lombok.RequiredArgsConstructor;
 import org.apache.avro.specific.SpecificRecord;
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.HubEvents.*;
+import ru.practicum.collector.events.hub.*;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 

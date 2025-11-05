@@ -1,4 +1,4 @@
-package ru.practicum.collector.HubEvents;
+package ru.practicum.collector.events.hub;
 
 public enum HubEventType {
     DEVICE_ADDED_EVENT,

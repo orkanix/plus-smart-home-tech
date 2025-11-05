@@ -2,7 +2,7 @@ package ru.practicum.collector.kafka.mapper.sensor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.SensorEvents.SwitchSensor;
+import ru.practicum.collector.events.sensor.SwitchSensor;
 import ru.practicum.collector.kafka.mapper.AvroMapper;
 import ru.yandex.practicum.kafka.telemetry.event.SwitchSensorAvro;
 

@@ -1,10 +1,12 @@
-package ru.practicum.collector.SensorEvents;
+package ru.practicum.collector.events.sensor;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter @ToString(callSuper = true)
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class ClimateSensor extends SensorEvent{
     private int temperatureC;
     private int humidity;

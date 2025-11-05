@@ -1,9 +1,7 @@
-package ru.practicum.collector.SensorEvents;
+package ru.practicum.collector.events.sensor;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +21,9 @@ import java.time.Instant;
         @JsonSubTypes.Type(value = SwitchSensor.class, name = "SWITCH_SENSOR_EVENT"),
         @JsonSubTypes.Type(value = TemperatureSensor.class, name = "TEMPERATURE_SENSOR_EVENT")
 })
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public abstract class SensorEvent {
     private String id;
     private String hubId;
