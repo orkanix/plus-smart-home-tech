@@ -21,7 +21,7 @@ public class ScenarioConditionMapper implements AvroMapper<ScenarioCondition, Sc
     }
 
     private ConditionTypeAvro getType(ScenarioCondition javaObject) {
-        return switch (javaObject.getConditionType()) {
+        return switch (javaObject.getType()) {
             case MOTION -> ConditionTypeAvro.MOTION;
             case LUMINOSITY -> ConditionTypeAvro.LUMINOSITY;
             case SWITCH -> ConditionTypeAvro.SWITCH;

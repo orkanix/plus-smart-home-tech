@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class ScenarioCondition{
     private String sensorId;
-    private ConditionType conditionType;
+    private ConditionType type;
     private ConditionOperation operation;
     private Integer value = null;
 }
