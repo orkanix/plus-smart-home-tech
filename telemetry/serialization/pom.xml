@@ -18,4 +18,12 @@
         <module>proto-schemas</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+    </dependencies>
+
 </project>
