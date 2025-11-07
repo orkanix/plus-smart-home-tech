@@ -12,13 +12,16 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-@RequiredArgsConstructor
 public class GeneralAvroSerializer implements Serializer<SpecificRecordBase> {
     private final EncoderFactory encoderFactory;
     private BinaryEncoder encoder;
 
     public GeneralAvroSerializer() {
         this(EncoderFactory.get());
+    }
+
+    public GeneralAvroSerializer(EncoderFactory encoderFactory) {
+        this.encoderFactory = encoderFactory;
     }
 
     public byte[] serialize(String topic, SpecificRecordBase data) {
