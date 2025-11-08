@@ -7,3 +7,6 @@ spring:
     topics:
       hub-topic-name: telemetry.hubs.v1
       sensor-topic-name: telemetry.sensors.v1
+  protobuf:
+    server:
+      port: 9090
