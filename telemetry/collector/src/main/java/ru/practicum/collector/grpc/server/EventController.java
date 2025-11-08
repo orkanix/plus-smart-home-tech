@@ -4,19 +4,29 @@ import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
+import ru.practicum.collector.grpc.converter.hub.HubProtoToAvroConverter;
+import ru.practicum.collector.grpc.converter.sensor.SensorProtoToAvroConverter;
+import ru.practicum.collector.service.CollectorService;
 import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 @GrpcService
-@Slf4j
+@RequiredArgsConstructor
 public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
+
+    private final SensorProtoToAvroConverter protoToAvroConverter;
+    private final HubProtoToAvroConverter hubProtoToAvroConverter;
+    private final CollectorService collectorService;
 
     @Override
     public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
         try {
+            collectorService.sendSensorEvent(getSensorAvroObject(request));
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -29,9 +39,10 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     }
 
     @Override
-    public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
+    public void collectHubEvent(HubEventProto request, StreamObserver<HubEventProto> responseObserver) {
         try {
-            responseObserver.onNext(Empty.getDefaultInstance());
+            collectorService.sendHubEvent(getHubAvroObject(request));
+            responseObserver.onNext(HubEventProto.getDefaultInstance());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(new StatusRuntimeException(
@@ -40,5 +51,26 @@ public class EventController extends CollectorControllerGrpc.CollectorController
                             .withCause(e)
             ));
         }
+    }
+
+    private SensorEventAvro getSensorAvroObject(SensorEventProto request) {
+        return switch (request.getPayloadCase()) {
+            case MOTION_SENSOR -> protoToAvroConverter.convertToMotionAvro(request);
+            case TEMPERATURE_SENSOR -> protoToAvroConverter.convertToTemperatureAvro(request);
+            case LIGHT_SENSOR -> protoToAvroConverter.convertToLightAvro(request);
+            case CLIMATE_SENSOR -> protoToAvroConverter.convertToClimateAvro(request);
+            case SWITCH_SENSOR -> protoToAvroConverter.convertToSwitchAvro(request);
+            default -> throw new IllegalArgumentException("Unknown payload type: " + request.getPayloadCase());
+        };
+    }
+
+    private HubEventAvro getHubAvroObject(HubEventProto request) {
+        return switch (request.getPayloadCase()) {
+            case DEVICE_ADDED -> hubProtoToAvroConverter.convertToDeviceAdded(request);
+            case DEVICE_REMOVED -> hubProtoToAvroConverter.convertToDeviceRemove(request);
+            case SCENARIO_ADDED -> hubProtoToAvroConverter.convertToScenarioAdded(request);
+            case SCENARIO_REMOVED -> hubProtoToAvroConverter.convertToScenarioRemove(request);
+            default -> throw new IllegalArgumentException("Unknown payload type: " + request.getPayloadCase());
+        };
     }
 }

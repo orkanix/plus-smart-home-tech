@@ -1,25 +1,23 @@
 package ru.practicum.collector.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import ru.practicum.collector.events.hub.HubEvent;
-import ru.practicum.collector.events.sensor.SensorEvent;
-import ru.practicum.collector.kafka.mapper.hub.HubEventMapper;
-import ru.practicum.collector.kafka.mapper.sensor.SensorEventMapper;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class KafkaEventProducer {
 
     protected final KafkaTemplate<String, SpecificRecordBase> producer;
-    private final HubEventMapper hubEventMapper;
-    private final SensorEventMapper sensorEventMapper;
 
     @Value("${spring.kafka.topics.hub-topic-name}")
     private String hubTopic;
@@ -39,13 +37,11 @@ public class KafkaEventProducer {
         producer.flush();
     }
 
-    public void sendHubEvent(HubEvent hubEvent) {
-        SpecificRecordBase hubEventAvro = hubEventMapper.toAvro(hubEvent);
-        send(hubEventAvro, hubEvent.getHubId(), hubEvent.getTimestamp(), hubTopic);
+    public void sendHubEvent(HubEventAvro hubEvent) {
+        send(hubEvent, hubEvent.getHubId(), hubEvent.getTimestamp(), hubTopic);
     }
 
-    public void sendSensorEvent(SensorEvent sensorEvent) {
-        SpecificRecordBase sensorEventAvro = sensorEventMapper.toAvro(sensorEvent);
-        send(sensorEventAvro, sensorEvent.getHubId(), sensorEvent.getTimestamp(), sensorTopic);
+    public void sendSensorEvent(SensorEventAvro sensorEvent) {
+        send(sensorEvent, sensorEvent.getHubId(), sensorEvent.getTimestamp(), sensorTopic);
     }
 }
