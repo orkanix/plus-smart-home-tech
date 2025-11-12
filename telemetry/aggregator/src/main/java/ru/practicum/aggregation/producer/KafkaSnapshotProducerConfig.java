@@ -1,4 +1,4 @@
-package ru.practicum.collector.kafka.producer;
+package ru.practicum.aggregation.producer;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaProducerConfig {
+public class KafkaSnapshotProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -25,18 +25,16 @@ public class KafkaProducerConfig {
     private String valueSerializerClass;
 
     @Bean
-    public ProducerFactory<String, SpecificRecordBase> producerFactory() throws ClassNotFoundException {
+    public ProducerFactory<String, SpecificRecordBase> snapshotProducerFactory() throws ClassNotFoundException {
         Map<String, Object> configProps = new HashMap<>();
-
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, Class.forName(keySerializerClass));
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, Class.forName(valueSerializerClass));
-
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
     @Bean
-    public KafkaTemplate<String, SpecificRecordBase> kafkaTemplate() throws ClassNotFoundException {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, SpecificRecordBase> snapshotKafkaTemplate() throws ClassNotFoundException {
+        return new KafkaTemplate<>(snapshotProducerFactory());
     }
 }
