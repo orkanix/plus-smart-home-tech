@@ -14,5 +14,5 @@ service CollectorController {
       returns (google.protobuf.Empty);
 
   rpc CollectHubEvent (telemetry.message.event.HubEventProto)
-      returns (telemetry.message.event.HubEventProto);
+      returns (google.protobuf.Empty);
 }

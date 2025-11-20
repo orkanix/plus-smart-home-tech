@@ -41,10 +41,11 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     }
 
     @Override
-    public void collectHubEvent(HubEventProto request, StreamObserver<HubEventProto> responseObserver) {
+    public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
         try {
+            log.info(request.toString());
             collectorService.sendHubEvent(getHubAvroObject(request));
-            responseObserver.onNext(HubEventProto.getDefaultInstance());
+            responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();
         } catch (Exception e) {
             responseObserver.onError(new StatusRuntimeException(
