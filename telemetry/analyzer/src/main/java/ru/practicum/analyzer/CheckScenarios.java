@@ -78,7 +78,6 @@ public class CheckScenarios {
 
         SensorStateAvro state = snapshot.getSensorsState().get(sensorId);
         if (state == null || state.getData() == null) {
-            log.info(snapshot.getSensorsState().toString());
             log.info("Данных для сенсора {} пока нет, пропускаем проверку", sensorId);
             return true;
         }
@@ -127,8 +126,8 @@ public class CheckScenarios {
     private boolean checkOperation(ConditionOperationAvro operationType, Integer expected, Integer actual) {
         return switch (operationType) {
             case EQUALS -> actual.equals(expected);
-            case GREATER_THAN -> actual > expected;
-            case LOWER_THAN -> actual < expected;
+            case GREATER_THAN -> actual < expected;
+            case LOWER_THAN -> actual > expected;
         };
     }
 }
