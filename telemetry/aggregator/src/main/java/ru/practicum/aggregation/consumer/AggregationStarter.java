@@ -62,7 +62,7 @@ public class AggregationStarter {
                         }
                     });
                 }
-                eventConsumer.commitSync();
+                eventConsumer.commitAsync();
             }
         } catch (WakeupException ignored) {
         } catch (Exception e) {

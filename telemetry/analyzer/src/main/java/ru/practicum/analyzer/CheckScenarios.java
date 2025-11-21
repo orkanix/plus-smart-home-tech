@@ -5,15 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.analyzer.exception.EntityNotFoundException;
-import ru.practicum.analyzer.grpc.client.AnalyzerClient;
 import ru.practicum.analyzer.model.*;
 import ru.practicum.analyzer.repository.*;
 import ru.yandex.practicum.grpc.telemetry.event.*;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -24,7 +24,6 @@ public class CheckScenarios {
     private final ScenarioConditionRepository scenarioConditionRepository;
     private final ScenarioActionRepository scenarioActionRepository;
     private final SensorRepository sensorRepository;
-    private final AnalyzerClient client;
 
     public List<DeviceActionRequest> checkScenarios(SensorsSnapshotAvro snapshot) {
         log.info("Начинаю проверку сценариев...");
@@ -32,21 +31,35 @@ public class CheckScenarios {
         List<DeviceActionRequest> result = new ArrayList<>();
 
         List<Scenario> scenarioList = scenarioRepository.findByHubId(snapshot.getHubId());
-        if (scenarioList.isEmpty()) return result;
+        if (scenarioList.isEmpty()) {
+            return result;
+        }
+
+        List<Long> scenarioIds = scenarioList.stream()
+                .map(Scenario::getId)
+                .toList();
+
+        List<ScenarioCondition> allConditions =
+                scenarioConditionRepository.findAllByScenarioIdIn(scenarioIds);
+        List<ScenarioAction> allActions =
+                scenarioActionRepository.findAllByScenarioIdIn(scenarioIds);
+
+        Map<Long, List<ScenarioCondition>> conditionsByScenario = allConditions.stream()
+                .collect(Collectors.groupingBy(sc -> sc.getScenario().getId()));
+        Map<Long, List<ScenarioAction>> actionsByScenario = allActions.stream()
+                .collect(Collectors.groupingBy(sa -> sa.getScenario().getId()));
 
         for (Scenario scenario : scenarioList) {
+            List<ScenarioCondition> scenarioConditions =
+                    conditionsByScenario.getOrDefault(scenario.getId(), List.of());
 
-            Collection<ScenarioCondition> scenarioConditionList = scenarioConditionRepository.findAllByScenarioId(scenario.getId());
-
-            boolean allConditionsTrue = scenarioConditionList.stream()
-                    .allMatch(condition ->
-                            checkCondition(condition, snapshot, snapshot.getHubId())
-                    );
+            boolean allConditionsTrue = scenarioConditions.stream()
+                    .allMatch(condition -> checkCondition(condition, snapshot, snapshot.getHubId()));
 
             if (allConditionsTrue) {
                 log.info("Все условия прошли проверку!");
-                Collection<ScenarioAction> actions =
-                        scenarioActionRepository.findAllByScenarioId(scenario.getId());
+                List<ScenarioAction> actions =
+                        actionsByScenario.getOrDefault(scenario.getId(), List.of());
 
                 for (ScenarioAction action : actions) {
                     DeviceActionProto deviceActionProto = DeviceActionProto.newBuilder()
@@ -55,22 +68,21 @@ public class CheckScenarios {
                             .setValue(action.getAction().getValue())
                             .build();
 
-
                     DeviceActionRequest request = DeviceActionRequest.newBuilder()
                             .setHubId(snapshot.getHubId())
                             .setScenarioName(action.getScenario().getName())
                             .setAction(deviceActionProto)
                             .setTimestamp(Timestamps.fromMillis(System.currentTimeMillis()))
                             .build();
-                    client.sendDeviceActions(request);
-                    result.add(request);
 
+                    result.add(request);
                 }
             }
         }
 
         return result;
     }
+
 
     private boolean checkCondition(ScenarioCondition condition, SensorsSnapshotAvro snapshot, String hubId) {
 
