@@ -12,7 +12,6 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +30,6 @@ public class AggregationStarter {
 
     @Value("${spring.kafka.topics.snapshots-topic-name}")
     private String snapshotsTopic;
-
-    private final List<SensorsSnapshotAvro> snapshotsList = new ArrayList<>();
 
     public void start() {
         log.info("Начало метода start()");
@@ -65,7 +62,7 @@ public class AggregationStarter {
                         }
                     });
                 }
-                eventConsumer.commitSync();
+                eventConsumer.commitAsync();
             }
         } catch (WakeupException ignored) {
         } catch (Exception e) {
