@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.collector.events.hub.HubEvent;
 import ru.practicum.collector.events.sensor.SensorEvent;
 import ru.practicum.collector.kafka.producer.KafkaEventProducer;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
 @Service
 @RequiredArgsConstructor
@@ -12,11 +14,11 @@ public class CollectorService {
 
     private final KafkaEventProducer kafkaEventProducer;
 
-    public void sendSensorEvent(SensorEvent event) {
+    public void sendSensorEvent(SensorEventAvro event) {
         kafkaEventProducer.sendSensorEvent(event);
     }
 
-    public void sendHubEvent(HubEvent event) {
+    public void sendHubEvent(HubEventAvro event) {
         kafkaEventProducer.sendHubEvent(event);
     }
 }

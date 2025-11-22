@@ -1,6 +1,5 @@
 package ru.practicum.collector.kafka.producer;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@RequiredArgsConstructor
 public class KafkaProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")

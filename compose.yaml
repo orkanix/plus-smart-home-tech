@@ -1,4 +1,14 @@
 services:
+  stats-db:
+    image: postgres:16.1
+    container_name: analyze-db
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=analyze
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
   kafka:
     image: confluentinc/confluent-local:7.4.3
     hostname: kafka
