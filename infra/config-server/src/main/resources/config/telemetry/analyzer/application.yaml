@@ -35,3 +35,8 @@ spring:
     topics:
       hub-topic-name: telemetry.hubs.v1
       snapshots-topic-name: telemetry.snapshots.v1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
