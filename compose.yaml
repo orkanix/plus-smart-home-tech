@@ -1,11 +1,21 @@
 services:
-  stats-db:
+  analyzer-db:
     image: postgres:16.1
     container_name: analyze-db
     ports:
       - "5433:5432"
     environment:
       - POSTGRES_DB=analyze
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+  shopping-db:
+    image: postgres:16.1
+    container_name: shopping-db
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=shopping
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
 
@@ -43,3 +53,12 @@ services:
                              --partitions 1 --replication-factor 1 --if-not-exists \
                              --bootstrap-server kafka:29092'"
     init: true
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "9999:8080"
+    environment:
+      SWAGGER_JSON: /docs/shopping-store.json
+    volumes:
+      - ./docs:/docs:ro   # ← монтируем всю папку docs
