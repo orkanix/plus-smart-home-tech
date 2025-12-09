@@ -1,7 +1,7 @@
 package ru.practicum.shopping_cart.service;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shopping_cart.model.ShoppingCartDto;
+import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.shopping_cart.model.ChangeProductQuantityRequest;
 
 import java.util.List;
@@ -11,8 +11,6 @@ import java.util.Map;
 public interface ShoppingCartService {
 
     ShoppingCartDto getCart(String username);
-
-    ShoppingCartDto getCartForWarehouse(ShoppingCartDto shoppingCartDto);
 
     ShoppingCartDto addProductToCart(String username, Map<String, Integer> products);
 

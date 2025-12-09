@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shopping_store.model.Product;
 import ru.practicum.shopping_store.model.ProductCategory;
 
-import java.util.Optional;
-
 public interface ShoppingStoreRepository extends JpaRepository<Product, String> {
 
     Page<Product> findAllByProductCategory(ProductCategory category, Pageable pageable);

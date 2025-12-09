@@ -1,7 +1,7 @@
 package ru.practicum.shopping_cart.model.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shopping_cart.model.ShoppingCartDto;
+import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.shopping_cart.model.ShoppingCartEntity;
 import ru.practicum.shopping_cart.model.ShoppingCartItem;
 

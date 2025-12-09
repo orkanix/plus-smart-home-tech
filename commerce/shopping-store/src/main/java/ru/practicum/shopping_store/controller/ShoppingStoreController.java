@@ -2,12 +2,12 @@ package ru.practicum.shopping_store.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
+import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
 import ru.practicum.shopping_store.model.*;
-import ru.practicum.shopping_store.model.dto.ProductDto;
-import ru.practicum.shopping_store.model.dto.ProductPageDto;
 import ru.practicum.shopping_store.service.ShoppingStoreService;
 
 
@@ -19,9 +19,9 @@ public class ShoppingStoreController {
     private final ShoppingStoreService service;
 
     @GetMapping
-    public ProductPageDto getProducts(
+    public Page<ProductDto> getProducts(
             @RequestParam ProductCategory category,
-            @PageableDefault(page = 0, size = 20) Pageable pageable
+            @PageableDefault(sort = {"productName"}) Pageable pageable
     ) {
         return service.getProducts(category, pageable);
     }

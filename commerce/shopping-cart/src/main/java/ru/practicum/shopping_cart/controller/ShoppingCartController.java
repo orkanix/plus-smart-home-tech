@@ -3,8 +3,8 @@ package ru.practicum.shopping_cart.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.shopping_cart.model.ChangeProductQuantityRequest;
-import ru.practicum.shopping_cart.model.ShoppingCartDto;
 import ru.practicum.shopping_cart.service.ShoppingCartService;
 
 import java.util.List;

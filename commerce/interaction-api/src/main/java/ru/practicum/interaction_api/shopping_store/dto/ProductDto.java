@@ -1,11 +1,8 @@
-package ru.practicum.shopping_store.model.dto;
+package ru.practicum.interaction_api.shopping_store.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import ru.practicum.shopping_store.model.ProductCategory;
-import ru.practicum.shopping_store.model.ProductState;
-import ru.practicum.shopping_store.model.QuantityState;
 
 @Data
 @Builder

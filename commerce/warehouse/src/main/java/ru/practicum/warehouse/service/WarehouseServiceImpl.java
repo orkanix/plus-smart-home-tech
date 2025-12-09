@@ -3,14 +3,17 @@ package ru.practicum.warehouse.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
+import ru.practicum.interaction_api.warehouse.dto.AddressDto;
+import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
+import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
+import ru.practicum.interaction_api.warehouse.dto.DimensionDto;
 import ru.practicum.shopping_store.exception.ProductNotFoundException;
 import ru.practicum.warehouse.Warehouse;
-import ru.practicum.warehouse.client.CartClient;
 import ru.practicum.warehouse.exception.ProductInShoppingCartLowQuantityInWarehouse;
 import ru.practicum.warehouse.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
 import ru.practicum.warehouse.model.ProductInWarehouse;
-import ru.practicum.warehouse.model.dto.*;
 import ru.practicum.warehouse.model.mapper.ProductInWarehouseMapper;
 import ru.practicum.warehouse.repository.WarehouseRepository;
 
@@ -20,7 +23,6 @@ import ru.practicum.warehouse.repository.WarehouseRepository;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository repository;
-    private final CartClient client;
 
     @Override
     public ProductInWarehouseDto addNewProduct(ProductInWarehouseDto newProduct) {
@@ -36,8 +38,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         BookedProductsDto bookedProductsDto = BookedProductsDto.builder().build();
 
         shoppingCart.getProducts().forEach((productId, quantity) -> {
-            ProductInWarehouse productInWarehouse = repository.findById(productId)
-                    .orElseThrow(() -> new ProductNotFoundException("Продукт с id " + productId + " не найден на складе!"));
+            ProductInWarehouse productInWarehouse = productInWarehouseExists(productId);
 
             if (quantity > productInWarehouse.getQuantity()) {
                 throw new ProductInShoppingCartLowQuantityInWarehouse("Товара с id " + productId + " в корзине больше, чем доступно на складе!");
@@ -52,8 +53,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public void acceptProduct(AddProductToWarehouseRequest request) {
-        ProductInWarehouse productInWarehouse = repository.findById(request.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException("Продукт с id " + request.getProductId() + " не найден на складе!"));
+        ProductInWarehouse productInWarehouse = productInWarehouseExists(request.getProductId());
         productInWarehouse.setQuantity(productInWarehouse.getQuantity()+request.getQuantity());
 
         repository.save(productInWarehouse);
@@ -71,5 +71,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     private Double calculateVolume(ProductInWarehouse product) {
         DimensionDto dimension = product.getDimension();
         return dimension.getHeight()*dimension.getDepth()*dimension.getWidth();
+    }
+
+    private ProductInWarehouse productInWarehouseExists(String productId) {
+        return repository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Продукт с id " + productId + " не найден на складе!"));
     }
 }

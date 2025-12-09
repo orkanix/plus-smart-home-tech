@@ -1,4 +1,4 @@
-package ru.practicum.warehouse.model.dto;
+package ru.practicum.interaction_api.warehouse.dto;
 
 import lombok.Builder;
 import lombok.Data;

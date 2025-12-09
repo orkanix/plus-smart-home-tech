@@ -1,4 +1,4 @@
-package ru.practicum.shopping_store.model.dto;
+package ru.practicum.interaction_api.shopping_store.dto;
 
 import lombok.Builder;
 import lombok.Data;

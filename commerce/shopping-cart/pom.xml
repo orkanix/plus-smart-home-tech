@@ -61,15 +61,10 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+
         <dependency>
             <groupId>ru.yandex.practicum</groupId>
-            <artifactId>shopping-store</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>ru.yandex.practicum</groupId>
-            <artifactId>warehouse</artifactId>
+            <artifactId>interaction-api</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

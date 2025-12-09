@@ -1,16 +1,16 @@
 package ru.practicum.shopping_store.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
 import ru.practicum.shopping_store.model.ProductCategory;
-import ru.practicum.shopping_store.model.dto.ProductDto;
-import ru.practicum.shopping_store.model.dto.ProductPageDto;
 import ru.practicum.shopping_store.model.SetProductQuantityStateRequest;
 
 @Service
 public interface ShoppingStoreService {
 
-    ProductPageDto getProducts(ProductCategory category, Pageable pageable);
+    Page<ProductDto> getProducts(ProductCategory category, Pageable pageable);
 
     ProductDto getProductById(String productId);
 

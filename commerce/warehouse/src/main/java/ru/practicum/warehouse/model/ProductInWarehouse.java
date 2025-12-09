@@ -2,8 +2,8 @@ package ru.practicum.warehouse.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.practicum.interaction_api.warehouse.dto.DimensionDto;
 import ru.practicum.shopping_store.model.Product;
-import ru.practicum.warehouse.model.dto.DimensionDto;
 
 @Entity
 @Table(name = "warehouse_products")

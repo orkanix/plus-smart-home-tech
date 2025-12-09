@@ -3,16 +3,14 @@ package ru.practicum.warehouse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import ru.practicum.warehouse.model.dto.AddressDto;
+import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 
 import java.security.SecureRandom;
 import java.util.Random;
 
 @SpringBootApplication
-@EnableFeignClients
-@EnableDiscoveryClient
+@EnableFeignClients(basePackages = "ru.practicum.interaction_api")
 @EntityScan({
         "ru.practicum.warehouse.model",
         "ru.practicum.shopping_store.model"

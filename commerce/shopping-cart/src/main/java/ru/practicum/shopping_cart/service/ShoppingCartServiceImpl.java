@@ -3,8 +3,10 @@ package ru.practicum.shopping_cart.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shopping_cart.client.ShoppingCartClient;
+import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
+import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.shopping_cart.expection.CartNotFoundException;
+import ru.practicum.shopping_cart.expection.CartWasDeactivated;
 import ru.practicum.shopping_cart.expection.NotAuthorizedUserException;
 import ru.practicum.shopping_cart.model.*;
 import ru.practicum.shopping_cart.model.mapper.CartMapper;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final ShoppingCartRepository repository;
-    private final ShoppingCartClient client;
+    private final WarehouseClient client;
 
     @Override
     public ShoppingCartDto getCart(String username) {
@@ -29,11 +31,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         return CartMapper.toDto(cartExistsByUsername(username));
-    }
-
-    @Override
-    public ShoppingCartDto getCartForWarehouse(ShoppingCartDto shoppingCartDto) {
-        return CartMapper.toDto(cartExistsById(shoppingCartDto.getShoppingCartId()));
     }
 
     @Override
@@ -105,16 +102,18 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private ShoppingCartEntity cartExistsByUsername(String username) {
-        return repository.findByOwner(username)
+        ShoppingCartEntity shoppingCart = repository.findByOwner(username)
                 .orElseThrow(() -> new CartNotFoundException("Корзина для пользователя " + username + " не найдена!"));
-    }
 
-    private ShoppingCartEntity cartExistsById(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new CartNotFoundException("Корзина с id " + id + " не найдена!"));
+        if (shoppingCart.getState().equals(ShoppingCartState.DEACTIVATED)) {
+            throw new CartWasDeactivated("Корзина была диактивирована!");
+        }
+
+        return shoppingCart;
     }
 
     private ShoppingCartEntity addProductsToCart(ShoppingCartEntity shoppingCart, Map<String, Integer> products) {
+
         Map<String, Integer> validProducts = new HashMap<>(products);
         Map<String, ShoppingCartItem> itemMap = shoppingCart.getItems().stream()
                 .collect(Collectors.toMap(ShoppingCartItem::getProductId, Function.identity()));

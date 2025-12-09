@@ -5,15 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.shopping_store.exception.ProductNotFoundException;
 import ru.practicum.shopping_store.model.*;
-import ru.practicum.shopping_store.model.dto.ProductDto;
-import ru.practicum.shopping_store.model.dto.ProductPageDto;
-import ru.practicum.shopping_store.model.dto.SortDto;
 import ru.practicum.shopping_store.model.mapper.ProductMapper;
 import ru.practicum.shopping_store.repository.ShoppingStoreRepository;
-
-import java.util.List;
+import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
 
 @Slf4j
 @Service
@@ -23,26 +20,9 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     private final ShoppingStoreRepository repository;
 
     @Override
-    public ProductPageDto getProducts(ProductCategory category, Pageable pageable) {
+    public Page<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
         Page<Product> products = repository.findAllByProductCategory(category, pageable);
-
-        List<ProductDto> productsDto = products.getContent().stream()
-                .map(ProductMapper::toDto)
-                .toList();
-
-        List<SortDto> sortList = pageable.getSort().stream()
-                .map(order -> SortDto.builder()
-                        .property(order.getProperty())
-                        .direction(order.getDirection().name())
-                        .build())
-                .toList();
-
-        return ProductPageDto.builder()
-                .content(productsDto)
-                .totalPages(products.getTotalPages())
-                .totalElements(products.getTotalElements())
-                .sort(sortList)
-                .build();
+        return products.map(ProductMapper::toDto);
     }
 
     @Override
@@ -59,7 +39,6 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     @Override
     public ProductDto updateProduct(ProductDto productDto) {
         Product oldProduct = productExists(productDto.getProductId());
-
         return ProductMapper.toDto(repository.save(ProductMapper.updateFields(oldProduct, productDto)));
     }
 

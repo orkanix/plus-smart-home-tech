@@ -1,4 +1,4 @@
-package ru.practicum.shopping_cart.model;
+package ru.practicum.interaction_api.shopping_cart.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,8 @@
 package ru.practicum.warehouse.model.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.warehouse.model.ProductInWarehouse;
-import ru.practicum.warehouse.model.dto.ProductInWarehouseDto;
 
 @UtilityClass
 public class ProductInWarehouseMapper {

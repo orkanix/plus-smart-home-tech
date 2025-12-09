@@ -1,12 +1,13 @@
 package ru.practicum.warehouse.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
+import ru.practicum.interaction_api.warehouse.dto.AddressDto;
+import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
+import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
-import ru.practicum.warehouse.model.dto.AddressDto;
-import ru.practicum.warehouse.model.dto.BookedProductsDto;
-import ru.practicum.warehouse.model.dto.ProductInWarehouseDto;
-import ru.practicum.warehouse.model.dto.ShoppingCartDto;
 import ru.practicum.warehouse.service.WarehouseService;
 
 @RestController
@@ -32,7 +33,7 @@ public class WarehouseController {
     }
 
     @PostMapping("/add")
-    public void acceptProduct(@RequestBody AddProductToWarehouseRequest request) {
+    public void acceptProduct(@RequestBody @Valid AddProductToWarehouseRequest request) {
         service.acceptProduct(request);
     }
 }
