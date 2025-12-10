@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
-import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.shopping_store.exception.ProductNotFoundException;
 import ru.practicum.shopping_store.model.*;
 import ru.practicum.shopping_store.model.mapper.ProductMapper;

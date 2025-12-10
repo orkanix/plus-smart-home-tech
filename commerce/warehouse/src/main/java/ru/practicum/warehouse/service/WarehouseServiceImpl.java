@@ -8,9 +8,9 @@ import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
 import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.interaction_api.warehouse.dto.DimensionDto;
-import ru.practicum.shopping_store.exception.ProductNotFoundException;
 import ru.practicum.warehouse.Warehouse;
 import ru.practicum.warehouse.exception.ProductInShoppingCartLowQuantityInWarehouse;
+import ru.practicum.warehouse.exception.ProductInWarehouseNotFoundException;
 import ru.practicum.warehouse.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
 import ru.practicum.warehouse.model.ProductInWarehouse;
@@ -75,6 +75,6 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private ProductInWarehouse productInWarehouseExists(String productId) {
         return repository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("Продукт с id " + productId + " не найден на складе!"));
+                .orElseThrow(() -> new ProductInWarehouseNotFoundException("Продукт с id " + productId + " не найден на складе!"));
     }
 }
