@@ -2,6 +2,7 @@ package ru.practicum.warehouse.model.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
+import ru.practicum.warehouse.model.NewProductInWarehouseRequest;
 import ru.practicum.warehouse.model.ProductInWarehouse;
 
 @UtilityClass
@@ -16,12 +17,12 @@ public class ProductInWarehouseMapper {
                 .build();
     }
 
-    public static ProductInWarehouse toEntity(ProductInWarehouseDto dto) {
+    public static ProductInWarehouse toEntity(NewProductInWarehouseRequest newProduct) {
         return ProductInWarehouse.builder()
-                .productId(dto.getProductId())
-                .fragile(dto.getFragile())
-                .dimension(dto.getDimension())
-                .weight(dto.getWeight())
+                .productId(newProduct.getProductId())
+                .fragile(newProduct.getFragile())
+                .dimension(newProduct.getDimension())
+                .weight(newProduct.getWeight())
                 .build();
     }
 }

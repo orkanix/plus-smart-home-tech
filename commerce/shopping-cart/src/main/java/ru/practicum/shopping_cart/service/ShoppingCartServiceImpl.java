@@ -42,6 +42,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         try {
             ShoppingCartEntity shoppingCart = cartExistsByUsername(username);
 
+            client.checkQuantityForCart(CartMapper.toDto(shoppingCart));
             ShoppingCartEntity updated = addProductsToCart(shoppingCart, products);
 
             return CartMapper.toDto(repository.save(updated));

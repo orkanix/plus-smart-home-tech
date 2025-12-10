@@ -13,6 +13,7 @@ import ru.practicum.warehouse.exception.ProductInShoppingCartLowQuantityInWareho
 import ru.practicum.warehouse.exception.ProductInWarehouseNotFoundException;
 import ru.practicum.warehouse.exception.SpecifiedProductAlreadyInWarehouseException;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
+import ru.practicum.warehouse.model.NewProductInWarehouseRequest;
 import ru.practicum.warehouse.model.ProductInWarehouse;
 import ru.practicum.warehouse.model.mapper.ProductInWarehouseMapper;
 import ru.practicum.warehouse.repository.WarehouseRepository;
@@ -25,7 +26,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository repository;
 
     @Override
-    public ProductInWarehouseDto addNewProduct(ProductInWarehouseDto newProduct) {
+    public ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProduct) {
         if (isProductInWarehouse(newProduct.getProductId())) {
             throw new SpecifiedProductAlreadyInWarehouseException("Продукт с id " + newProduct.getProductId() + " уже добавлен на склад!");
         }

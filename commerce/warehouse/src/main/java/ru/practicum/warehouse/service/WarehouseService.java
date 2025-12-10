@@ -6,11 +6,12 @@ import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
 import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
+import ru.practicum.warehouse.model.NewProductInWarehouseRequest;
 
 @Service
 public interface WarehouseService {
 
-    ProductInWarehouseDto addNewProduct(ProductInWarehouseDto productInWarehouseDto);
+    ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProductInWarehouseRequest);
 
     BookedProductsDto checkQuantityForCart(ShoppingCartDto shoppingCart);
 

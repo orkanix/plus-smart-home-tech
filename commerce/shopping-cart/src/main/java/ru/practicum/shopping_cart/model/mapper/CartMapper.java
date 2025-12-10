@@ -20,21 +20,6 @@ public class CartMapper {
                 .build();
     }
 
-    public static ShoppingCartEntity toEntity(ShoppingCartDto shoppingCartDto, String username) {
-        ShoppingCartEntity cart = ShoppingCartEntity.builder()
-                .shoppingCartId(shoppingCartDto.getShoppingCartId())
-                .owner(username)
-                .build();
-
-        List<ShoppingCartItem> items = getProductsList(shoppingCartDto.getProducts());
-        items.forEach(item -> item.setShoppingCart(cart));
-        cart.setItems(items);
-
-        return cart;
-    }
-
-
-
     private Map<String, Integer> getProductsMap(List<ShoppingCartItem> products) {
         Map<String, Integer> productsMap = new HashMap<>();
 

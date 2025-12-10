@@ -8,6 +8,7 @@ import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
 import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
+import ru.practicum.warehouse.model.NewProductInWarehouseRequest;
 import ru.practicum.warehouse.service.WarehouseService;
 
 @RestController
@@ -23,8 +24,8 @@ public class WarehouseController {
     }
 
     @PutMapping
-    public ProductInWarehouseDto addNewProduct(@RequestBody ProductInWarehouseDto productInWarehouseDto) {
-        return service.addNewProduct(productInWarehouseDto);
+    public ProductInWarehouseDto addNewProduct(@RequestBody NewProductInWarehouseRequest newProductInWarehouseRequest) {
+        return service.addNewProduct(newProductInWarehouseRequest);
     }
 
     @PostMapping("/check")
