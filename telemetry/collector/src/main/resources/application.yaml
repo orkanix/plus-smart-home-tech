@@ -1,19 +1,16 @@
-server:
-  port: 8080
-
 spring:
-  grpc:
-    server:
-      port: 9090
+  application:
+    name: collector
+  config:
+    import: "configserver:"
 
-  kafka:
-    bootstrap-servers: localhost:9092
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: config-server
 
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: ru.practicum.avro.serializer.GeneralAvroSerializer
-
-    topics:
-      hub-topic-name: telemetry.hubs.v1
-      sensor-topic-name: telemetry.sensors.v1
-      snapshots-topic-name: telemetry.snapshots.v1
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
