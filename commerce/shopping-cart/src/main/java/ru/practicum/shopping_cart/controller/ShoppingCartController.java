@@ -23,11 +23,6 @@ public class ShoppingCartController {
         return service.getCart(username);
     }
 
-    @PostMapping("/warehouse")
-    public ShoppingCartDto getCartForWarehouse(@RequestBody ShoppingCartDto shoppingCartDto) {
-        return null;
-    }
-
     @PutMapping
     public ShoppingCartDto addProductToCart(@RequestParam String username, @RequestBody Map<String, Integer> products) {
         return service.addProductToCart(username, products);
