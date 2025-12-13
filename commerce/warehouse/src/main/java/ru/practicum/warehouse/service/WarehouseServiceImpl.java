@@ -18,6 +18,8 @@ import ru.practicum.warehouse.model.ProductInWarehouse;
 import ru.practicum.warehouse.model.mapper.ProductInWarehouseMapper;
 import ru.practicum.warehouse.repository.WarehouseRepository;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -65,7 +67,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         return Warehouse.getRandomAddress();
     }
 
-    private boolean isProductInWarehouse(String productId) {
+    private boolean isProductInWarehouse(UUID productId) {
         return repository.existsById(productId);
     }
 
@@ -74,7 +76,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         return dimension.getHeight()*dimension.getDepth()*dimension.getWidth();
     }
 
-    private ProductInWarehouse productInWarehouseExists(String productId) {
+    private ProductInWarehouse productInWarehouseExists(UUID productId) {
         return repository.findById(productId)
                 .orElseThrow(() -> new ProductInWarehouseNotFoundException("Продукт с id " + productId + " не найден на складе!"));
     }

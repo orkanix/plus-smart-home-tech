@@ -8,6 +8,7 @@ import ru.practicum.shopping_cart.model.ShoppingCartItem;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -20,14 +21,14 @@ public class CartMapper {
                 .build();
     }
 
-    private Map<String, Integer> getProductsMap(List<ShoppingCartItem> products) {
-        Map<String, Integer> productsMap = new HashMap<>();
+    private Map<UUID, Integer> getProductsMap(List<ShoppingCartItem> products) {
+        Map<UUID, Integer> productsMap = new HashMap<>();
 
         products.forEach(product -> productsMap.put(product.getProductId(), product.getQuantity()));
         return productsMap;
     }
 
-    private List<ShoppingCartItem> getProductsList(Map<String, Integer> products) {
+    private List<ShoppingCartItem> getProductsList(Map<UUID, Integer> products) {
         return products.entrySet().stream()
                 .map(entry -> {
                     ShoppingCartItem item = new ShoppingCartItem();

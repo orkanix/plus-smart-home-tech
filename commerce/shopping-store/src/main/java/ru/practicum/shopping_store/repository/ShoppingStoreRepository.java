@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shopping_store.model.Product;
 import ru.practicum.shopping_store.model.ProductCategory;
 
-public interface ShoppingStoreRepository extends JpaRepository<Product, String> {
+import java.util.UUID;
+
+public interface ShoppingStoreRepository extends JpaRepository<Product, UUID> {
 
     Page<Product> findAllByProductCategory(ProductCategory category, Pageable pageable);
 }

@@ -3,6 +3,8 @@ package ru.practicum.shopping_cart.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "shopping_cart_item")
 @Getter
@@ -21,7 +23,7 @@ public class ShoppingCartItem {
     private ShoppingCartEntity shoppingCart;
 
     @Column(name = "product_id", nullable = false)
-    private String productId;
+    private UUID productId;
 
     @Column(nullable = false)
     private Integer quantity;

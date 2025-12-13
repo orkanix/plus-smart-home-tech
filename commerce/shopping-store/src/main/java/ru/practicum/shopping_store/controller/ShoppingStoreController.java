@@ -10,6 +10,8 @@ import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
 import ru.practicum.shopping_store.model.*;
 import ru.practicum.shopping_store.service.ShoppingStoreService;
 
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/v1/shopping-store")
@@ -27,7 +29,7 @@ public class ShoppingStoreController {
     }
 
     @GetMapping("/{productId}")
-    public ProductDto getProductById(@PathVariable String productId) {
+    public ProductDto getProductById(@PathVariable UUID productId) {
         return service.getProductById(productId);
     }
 
@@ -42,12 +44,12 @@ public class ShoppingStoreController {
     }
 
     @PostMapping("/removeProductFromStore")
-    public Boolean removeProduct(@RequestBody String productId) {
-        return service.removeProduct(productId.replaceAll("^\"|\"$", ""));
+    public Boolean removeProduct(@RequestBody UUID productId) {
+        return service.removeProduct(productId);
     }
 
     @PostMapping("/quantityState")
-    public Boolean setQuantity(@RequestParam String productId, @RequestParam QuantityState quantityState) {
+    public Boolean setQuantity(@RequestParam UUID productId, @RequestParam QuantityState quantityState) {
         return service.setQuantity(SetProductQuantityStateRequest.builder()
                 .productId(productId)
                 .quantityState(quantityState)
@@ -55,6 +57,3 @@ public class ShoppingStoreController {
     }
 
 }
-
-//обработка ошибок
-//настройка Pageable своего!

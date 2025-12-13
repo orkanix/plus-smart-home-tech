@@ -9,6 +9,7 @@ import ru.practicum.shopping_cart.service.ShoppingCartService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -24,7 +25,7 @@ public class ShoppingCartController {
     }
 
     @PutMapping
-    public ShoppingCartDto addProductToCart(@RequestParam String username, @RequestBody Map<String, Integer> products) {
+    public ShoppingCartDto addProductToCart(@RequestParam String username, @RequestBody Map<UUID, Integer> products) {
         return service.addProductToCart(username, products);
     }
 
@@ -34,7 +35,7 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/remove")
-    public ShoppingCartDto removeProductFromCart(@RequestParam String username, @RequestBody List<String> products) {
+    public ShoppingCartDto removeProductFromCart(@RequestParam String username, @RequestBody List<UUID> products) {
         return service.removeProductFromCart(username, products);
     }
 
