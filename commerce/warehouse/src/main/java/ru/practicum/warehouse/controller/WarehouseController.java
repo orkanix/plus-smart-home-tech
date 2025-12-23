@@ -8,8 +8,13 @@ import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
 import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
+import ru.practicum.interaction_api.warehouse.dto.AssemblyProductsForOrderRequest;
 import ru.practicum.warehouse.model.NewProductInWarehouseRequest;
+import ru.practicum.interaction_api.warehouse.dto.ShippedToDeliveryRequest;
 import ru.practicum.warehouse.service.WarehouseService;
+
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/warehouse")
@@ -36,5 +41,20 @@ public class WarehouseController {
     @PostMapping("/add")
     public void acceptProduct(@RequestBody @Valid AddProductToWarehouseRequest request) {
         service.acceptProduct(request);
+    }
+
+    @PostMapping("/shipped")
+    public void shippedOrder(@RequestBody @Valid ShippedToDeliveryRequest request) {
+        service.shippedProducts(request);
+    }
+
+    @PostMapping("/returnProducts")
+    public void returnProducts(@RequestBody @Valid Map<UUID, Integer> products) {
+        service.returnProducts(products);
+    }
+
+    @PostMapping("/assembly")
+    public BookedProductsDto assemblyProducts(@RequestBody AssemblyProductsForOrderRequest request) {
+        return service.assemblyProducts(request);
     }
 }

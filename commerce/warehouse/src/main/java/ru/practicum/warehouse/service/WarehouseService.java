@@ -6,7 +6,12 @@ import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
 import ru.practicum.interaction_api.warehouse.dto.ProductInWarehouseDto;
 import ru.practicum.warehouse.model.AddProductToWarehouseRequest;
+import ru.practicum.interaction_api.warehouse.dto.AssemblyProductsForOrderRequest;
 import ru.practicum.warehouse.model.NewProductInWarehouseRequest;
+import ru.practicum.interaction_api.warehouse.dto.ShippedToDeliveryRequest;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public interface WarehouseService {
@@ -18,4 +23,10 @@ public interface WarehouseService {
     void acceptProduct(AddProductToWarehouseRequest request);
 
     AddressDto getAddress();
+
+    void shippedProducts(ShippedToDeliveryRequest request);
+
+    void returnProducts(Map<UUID, Integer> products);
+
+    BookedProductsDto assemblyProducts(AssemblyProductsForOrderRequest request);
 }

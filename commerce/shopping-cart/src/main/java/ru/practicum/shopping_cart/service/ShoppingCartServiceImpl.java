@@ -97,7 +97,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 break;
             }
         }
-        client.checkQuantityForCart(CartMapper.toDto(shoppingCart));
+        client.assemblyProductForOrderFromShoppingCart(CartMapper.toDto(shoppingCart));
 
         return CartMapper.toDto(repository.save(shoppingCart));
     }
