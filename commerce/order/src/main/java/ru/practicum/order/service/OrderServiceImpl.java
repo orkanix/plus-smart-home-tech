@@ -10,6 +10,7 @@ import ru.practicum.interaction_api.delivery.client.DeliveryClient;
 import ru.practicum.interaction_api.delivery.dto.DeliveryDto;
 import ru.practicum.interaction_api.order.dto.OrderDto;
 import ru.practicum.interaction_api.order.dto.OrderState;
+import ru.practicum.interaction_api.order.exception.NotAuthorizedUserException;
 import ru.practicum.interaction_api.payment.client.PaymentClient;
 import ru.practicum.interaction_api.payment.dto.PaymentDto;
 import ru.practicum.interaction_api.warehouse.exception.ProductLowQuantityInWarehouse;

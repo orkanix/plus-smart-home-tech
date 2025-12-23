@@ -3,6 +3,7 @@ package ru.practicum.shopping_cart.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.interaction_api.order.exception.NotAuthorizedUserException;
 import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.shopping_cart.expection.CartNotFoundException;
