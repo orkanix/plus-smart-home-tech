@@ -2,10 +2,8 @@ package ru.practicum.payment.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.interaction_api.order.dto.OrderDto;
 import ru.practicum.interaction_api.payment.dto.PaymentDto;
 import ru.practicum.payment.service.PaymentService;
@@ -20,6 +18,7 @@ public class PaymentController {
 
     private final PaymentService service;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public PaymentDto goToPayment(@RequestBody @Valid OrderDto order) {
         return service.goToPayment(order);
@@ -30,6 +29,7 @@ public class PaymentController {
         return service.calculateTotalCost(order);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/refund")
     public void createRefund(@RequestBody UUID paymentId) {
         service.createRefund(paymentId);
@@ -40,6 +40,7 @@ public class PaymentController {
         return service.calculateProductCost(order);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/failed")
     public void failedPayment(@RequestBody UUID paymentId) {
         service.failedPayment(paymentId);

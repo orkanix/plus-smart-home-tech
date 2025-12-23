@@ -1,14 +1,14 @@
 package ru.practicum.order.controller;
 
 import jakarta.validation.Valid;
-import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.interaction_api.order.dto.OrderDto;
-import ru.practicum.order.exception.ProductReturnRequest;
+import ru.practicum.order.model.ProductReturnRequest;
 import ru.practicum.order.model.CreateNewOrderRequest;
 import ru.practicum.order.service.OrderService;
 
@@ -36,6 +36,7 @@ public class OrderController {
         return service.getOrderByDelivery(deliveryId);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping
     public OrderDto createOrder(@RequestParam String username, @RequestBody @Valid CreateNewOrderRequest request) {
         return service.createOrder(username, request);

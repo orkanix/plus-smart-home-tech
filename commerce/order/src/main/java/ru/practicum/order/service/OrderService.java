@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.interaction_api.order.dto.OrderDto;
-import ru.practicum.order.exception.ProductReturnRequest;
+import ru.practicum.order.model.ProductReturnRequest;
 import ru.practicum.order.model.CreateNewOrderRequest;
 
 import java.util.UUID;

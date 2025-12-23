@@ -2,6 +2,7 @@ package ru.practicum.warehouse.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.interaction_api.warehouse.dto.AddressDto;
@@ -38,16 +39,19 @@ public class WarehouseController {
         return service.checkQuantityForCart(shoppingCart);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/add")
     public void acceptProduct(@RequestBody @Valid AddProductToWarehouseRequest request) {
         service.acceptProduct(request);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/shipped")
     public void shippedOrder(@RequestBody @Valid ShippedToDeliveryRequest request) {
         service.shippedProducts(request);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/returnProducts")
     public void returnProducts(@RequestBody @Valid Map<UUID, Integer> products) {
         service.returnProducts(products);

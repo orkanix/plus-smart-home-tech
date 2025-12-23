@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
@@ -33,6 +34,7 @@ public class ShoppingStoreController {
         return service.getProductById(productId);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping
     public ProductDto createProduct(@RequestBody @Valid ProductDto productDto) {
         return service.createProduct(productDto);
@@ -55,5 +57,4 @@ public class ShoppingStoreController {
                 .quantityState(quantityState)
                 .build());
     }
-
 }

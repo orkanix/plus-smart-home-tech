@@ -1,7 +1,6 @@
 package ru.practicum.order.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,13 @@ import ru.practicum.interaction_api.order.dto.OrderDto;
 import ru.practicum.interaction_api.order.dto.OrderState;
 import ru.practicum.interaction_api.payment.client.PaymentClient;
 import ru.practicum.interaction_api.payment.dto.PaymentDto;
-import ru.practicum.interaction_api.warehouse.ProductLowQuantityInWarehouse;
+import ru.practicum.interaction_api.warehouse.exception.ProductLowQuantityInWarehouse;
 import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.interaction_api.warehouse.dto.AssemblyProductsForOrderRequest;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
 import ru.practicum.order.exception.NoOrderFoundException;
-import ru.practicum.order.exception.NotAuthorizedUserException;
-import ru.practicum.order.exception.ProductReturnRequest;
+import ru.practicum.order.exception.NoSpecifiedProductInWarehouseException;
+import ru.practicum.order.model.ProductReturnRequest;
 import ru.practicum.order.model.CreateNewOrderRequest;
 import ru.practicum.order.model.Order;
 import ru.practicum.order.model.mapper.OrderMapper;
@@ -28,7 +27,6 @@ import ru.practicum.order.repository.OrderRepository;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -77,20 +75,17 @@ public class OrderServiceImpl implements OrderService {
         Order order = saveOrder(newOrder);
 
         try {
-            //получение зарезервированных товаров
             BookedProductsDto bookedProducts = warehouseClient.assemblyProducts(AssemblyProductsForOrderRequest.builder()
                     .products(request.getShoppingCart().getProducts())
                     .orderId(order.getOrderId())
                     .build());
 
-            //рассчет свойств товаров
             order.setDeliveryWeight(bookedProducts.getDeliveryWeight());
             order.setDeliveryVolume(bookedProducts.getDeliveryVolume());
             order.setFragile(bookedProducts.getFragile());
 
             order.setProductPrice(paymentClient.calculateProductCost(OrderMapper.toDto(order)));
 
-            // доставка
             DeliveryDto delivery = deliveryClient.createDelivery(
                     DeliveryDto.builder()
                             .fromAddress(warehouseClient.getWarehouseAddress())
@@ -100,29 +95,28 @@ public class OrderServiceImpl implements OrderService {
             );
             order.setDeliveryId(delivery.getDeliveryId());
 
-            // расчет стоимости доставки
             BigDecimal deliveryPrice =
                     deliveryClient.calculateDeliveryCost(OrderMapper.toDto(order));
             order.setDeliveryPrice(deliveryPrice);
 
-            // расчет итоговой стоимости
             BigDecimal totalPrice =
                     paymentClient.calculateTotalCost(OrderMapper.toDto(order));
             order.setTotalPrice(totalPrice);
 
-            //оплата
             PaymentDto payment = paymentClient.goToPayment(OrderMapper.toDto(order));
             order.setPaymentId(payment.getPaymentId());
 
             repository.save(order);
 
-            //меняем статус оплаты на успешный
             paymentClient.refund(payment.getPaymentId());
 
-            return OrderMapper.toDto(orderExists(order.getOrderId()));
+            return OrderMapper.toDto(getOrder(order.getOrderId()));
         } catch (ProductLowQuantityInWarehouse e) {
             repository.delete(order);
             throw new ProductLowQuantityInWarehouse(e.getMessage());
+        } catch (NoSpecifiedProductInWarehouseException e){
+            repository.delete(order);
+            throw new NoSpecifiedProductInWarehouseException(e.getMessage());
         } catch (Exception e) {
             repository.delete(order);
             throw new RuntimeException(e.getMessage());
@@ -132,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto returnOrder(ProductReturnRequest request) {
 
-        Order order = orderExists(request.getOrderId());
+        Order order = getOrder(request.getOrderId());
 
         warehouseClient.returnProducts(request.getProducts());
         order.setState(OrderState.PRODUCT_RETURNED);
@@ -143,7 +137,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto paymentOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.PAID);
 
         return OrderMapper.toDto(repository.save(order));
@@ -152,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto failedPaymentOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.PAYMENT_FAILED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -161,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto deliveryOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.DELIVERED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -170,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto failedDeliveryOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.DELIVERY_FAILED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -179,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto completedOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.COMPLETED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -188,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto calculateTotalOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setTotalPrice(paymentClient.calculateTotalCost(OrderMapper.toDto(order)));
 
         return OrderMapper.toDto(repository.save(order));
@@ -197,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto calculateDeliveryOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setDeliveryPrice(deliveryClient.calculateDeliveryCost(OrderMapper.toDto(order)));
 
         return OrderMapper.toDto(repository.save(order));
@@ -206,7 +200,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto assemblyOrder(UUID orderId) {
 
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.ASSEMBLED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -214,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto failedAssemblyOrder(UUID orderId) {
-        Order order = orderExists(orderId);
+        Order order = getOrder(orderId);
         order.setState(OrderState.ASSEMBLY_FAILED);
 
         return OrderMapper.toDto(repository.save(order));
@@ -225,13 +219,8 @@ public class OrderServiceImpl implements OrderService {
         return repository.save(newOrder);
     }
 
-    private Order orderExists(UUID orderId) {
+    private Order getOrder(UUID orderId) {
         return repository.findById(orderId)
                 .orElseThrow(() -> new NoOrderFoundException("Заказ с id " + orderId + " не найден!"));
-    }
-
-    public OrderState getActualState(UUID orderId) {
-        Order order = repository.findById(orderId).orElseThrow();
-        return order.getState();
     }
 }

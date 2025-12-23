@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.interaction_api.delivery.client.DeliveryClient;
 import ru.practicum.interaction_api.order.client.OrderClient;
 import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
-import ru.practicum.interaction_api.warehouse.ProductLowQuantityInWarehouse;
+import ru.practicum.interaction_api.warehouse.exception.ProductLowQuantityInWarehouse;
 import ru.practicum.interaction_api.warehouse.dto.*;
 import ru.practicum.warehouse.Warehouse;
 import ru.practicum.warehouse.exception.*;
@@ -45,7 +45,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         BookedProductsDto bookedProductsDto = BookedProductsDto.builder().build();
 
         shoppingCart.getProducts().forEach((productId, quantity) -> {
-            ProductInWarehouse productInWarehouse = productInWarehouseExists(productId);
+            ProductInWarehouse productInWarehouse = getProductInWarehouse(productId);
 
             if (quantity > productInWarehouse.getQuantity()) {
                 throw new ProductInShoppingCartLowQuantityInWarehouse("Товара с id " + productId + " в корзине больше, чем доступно на складе!");
@@ -61,11 +61,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void acceptProduct(AddProductToWarehouseRequest request) {
 
-        ProductInWarehouse productInWarehouse = productInWarehouseExists(request.getProductId());
+        ProductInWarehouse productInWarehouse = getProductInWarehouse(request.getProductId());
         productInWarehouse.setQuantity(productInWarehouse.getQuantity()+request.getQuantity());
 
         warehouseRepository.save(productInWarehouse);
-        log.info(productInWarehouse.getProductId() + " " + productInWarehouse.getQuantity());
+
+        log.info("Продукт с id {} в количестве {} принят на склад!", productInWarehouse.getProductId(), productInWarehouse.getQuantity());
     }
 
     @Override
@@ -94,7 +95,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             Integer quantity = entry.getValue();
 
             try {
-                ProductInWarehouse product = productInWarehouseExists(productId);
+                ProductInWarehouse product = getProductInWarehouse(productId);
 
                 product.setQuantity(product.getQuantity() + quantity);
                 warehouseRepository.save(product);
@@ -120,7 +121,7 @@ public class WarehouseServiceImpl implements WarehouseService {
             Integer quantity = entry.getValue();
 
             try {
-                ProductInWarehouse product = productInWarehouseExists(productId);
+                ProductInWarehouse product = getProductInWarehouse(productId);
 
                 if (product.getQuantity() < quantity) {
                     throw new ProductLowQuantityInWarehouse("Товара с id " + productId + " на складе меньше, чем запрашивается!");
@@ -129,7 +130,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                 product.setQuantity(product.getQuantity() - quantity);
                 warehouseRepository.save(product);
 
-                log.info(product.getQuantity().toString());
+                log.info("Остаток товара с id: {} на складе: {}.", productId, product.getQuantity().toString());
 
                 deliveryWeight += product.getWeight();
                 deliveryVolume += calculateVolume(product);
@@ -139,7 +140,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                 }
 
             } catch (ProductInWarehouseNotFoundException e) {
-                log.warn("Продукт с id {} не найден на складе, пропускаем!", productId);
+                throw new SpecifiedProductAlreadyInWarehouseException("Товар с id " + productId + " не найден на складе!");
             }
         }
 
@@ -164,7 +165,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         return dimension.getHeight()*dimension.getDepth()*dimension.getWidth();
     }
 
-    private ProductInWarehouse productInWarehouseExists(UUID productId) {
+    private ProductInWarehouse getProductInWarehouse(UUID productId) {
         return warehouseRepository.findById(productId)
                 .orElseThrow(() -> new ProductInWarehouseNotFoundException("Продукт с id " + productId + " не найден на складе!"));
     }

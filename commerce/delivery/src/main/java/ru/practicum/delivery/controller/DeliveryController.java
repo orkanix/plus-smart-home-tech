@@ -2,6 +2,7 @@ package ru.practicum.delivery.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.delivery.service.DeliveryService;
 import ru.practicum.interaction_api.delivery.dto.DeliveryDto;
@@ -22,16 +23,19 @@ public class DeliveryController {
         return service.createDelivery(delivery);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/successful")
     public void successfulDelivery(@RequestBody UUID deliveryId) {
         service.successfulDelivery(deliveryId);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/picked")
     public void pickedDelivery(@RequestBody UUID deliveryId) {
         service.pickedDelivery(deliveryId);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/failed")
     public void failedDelivery(@RequestBody UUID deliveryId) {
         service.failedDelivery(deliveryId);

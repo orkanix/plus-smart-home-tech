@@ -1,4 +1,4 @@
-package ru.practicum.order.exception;
+package ru.practicum.order.model;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

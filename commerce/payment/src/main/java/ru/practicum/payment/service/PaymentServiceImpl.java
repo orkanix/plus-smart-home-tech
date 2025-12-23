@@ -9,8 +9,8 @@ import ru.practicum.interaction_api.payment.dto.PaymentDto;
 import ru.practicum.interaction_api.payment.dto.PaymentStatus;
 import ru.practicum.interaction_api.shopping_store.client.ShoppingStoreClient;
 import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
+import ru.practicum.interaction_api.shopping_store.exception.ProductNotFoundException;
 import ru.practicum.payment.exception.PaymentNotFound;
-import ru.practicum.payment.exception.ProductNotFoundException;
 import ru.practicum.payment.model.Payment;
 import ru.practicum.payment.model.mapper.PaymentMapper;
 import ru.practicum.payment.repository.PaymentRepository;
@@ -59,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void createRefund(UUID paymentId) {
 
-        Payment payment = paymentExists(paymentId);
+        Payment payment = getPayment(paymentId);
 
         payment.setStatus(PaymentStatus.SUCCESS);
         repository.save(payment);
@@ -98,7 +98,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void failedPayment(UUID paymentId) {
 
-        Payment payment = paymentExists(paymentId);
+        Payment payment = getPayment(paymentId);
 
         payment.setStatus(PaymentStatus.FAILED);
         repository.save(payment);
@@ -109,7 +109,7 @@ public class PaymentServiceImpl implements PaymentService {
         log.warn("Ошибка при оплате с id {}!", paymentId);
     }
 
-    private Payment paymentExists(UUID paymentId) {
+    private Payment getPayment(UUID paymentId) {
         return repository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFound("Оплата с id " + paymentId + " не найдена!"));
     }

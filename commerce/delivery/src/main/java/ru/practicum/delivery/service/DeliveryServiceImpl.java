@@ -90,7 +90,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 .orElseThrow(() -> new NoDeliveryFoundException("Доставка с id: " + deliveryId + " не найдена!"));
     }
 
-    private boolean addressContains(DeliveryAddress address, String substring) {
+    private boolean isAddressContains(DeliveryAddress address, String substring) {
         if (address == null || substring == null) return false;
 
         return (address.getCountry().contains(substring)
@@ -103,10 +103,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     private BigDecimal calculateDelivery(Delivery delivery, OrderDto order) {
         BigDecimal deliveryPrice = BASE_DELIVERY_COST;
 
-        if (addressContains(delivery.getFromAddress(), "ADDRESS_1")) {
+        if (isAddressContains(delivery.getFromAddress(), "ADDRESS_1")) {
             deliveryPrice = deliveryPrice.multiply(BigDecimal.valueOf(1)).add(BASE_DELIVERY_COST);
         }
-        else if (addressContains(delivery.getFromAddress(), "ADDRESS_2")) {
+        else if (isAddressContains(delivery.getFromAddress(), "ADDRESS_2")) {
             deliveryPrice = deliveryPrice.multiply(BigDecimal.valueOf(2)).add(BASE_DELIVERY_COST);
         }
 

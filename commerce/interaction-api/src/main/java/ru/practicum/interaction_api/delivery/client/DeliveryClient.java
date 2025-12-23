@@ -9,7 +9,6 @@ import ru.practicum.interaction_api.delivery.dto.DeliveryDto;
 import ru.practicum.interaction_api.order.dto.OrderDto;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @FeignClient(name = "delivery")
 
@@ -19,8 +18,5 @@ public interface DeliveryClient {
     DeliveryDto createDelivery(@RequestBody @Valid DeliveryDto delivery);
 
     @PostMapping("/api/v1/delivery/cost")
-    BigDecimal calculateDeliveryCost(OrderDto order);
-
-    @PostMapping("/api/v1/delivery/picked")
-    void pickedDelivery(UUID deliveryId);
+    BigDecimal calculateDeliveryCost(@RequestBody @Valid OrderDto order);
 }

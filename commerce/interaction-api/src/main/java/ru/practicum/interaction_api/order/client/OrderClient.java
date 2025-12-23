@@ -1,7 +1,6 @@
 package ru.practicum.interaction_api.order.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.practicum.interaction_api.order.dto.OrderDto;
@@ -32,18 +31,6 @@ public interface OrderClient {
     @PostMapping(BASE_URL+"/delivery/failed")
     OrderDto failedDeliveryOrder(@RequestBody UUID orderId);
 
-    @PostMapping(BASE_URL+"/completed")
-    OrderDto completedOrder(@RequestBody UUID orderId);
-
-    @PostMapping(BASE_URL+"/calculate/total")
-    OrderDto calculateTotalOrder(@RequestBody UUID orderId);
-
-    @PostMapping(BASE_URL+"/calculate/delivery")
-    OrderDto calculateDeliveryOrder(@RequestBody UUID orderId);
-
     @PostMapping(BASE_URL+"/assembly")
     OrderDto assemblyOrder(@RequestBody UUID orderId);
-
-    @PostMapping(BASE_URL+"/assembly/failed")
-    OrderDto failedAssemblyOrder(@RequestBody UUID orderId);
 }

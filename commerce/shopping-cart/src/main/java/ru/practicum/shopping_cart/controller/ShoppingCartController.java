@@ -2,6 +2,7 @@ package ru.practicum.shopping_cart.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.shopping_cart.model.ChangeProductQuantityRequest;
@@ -29,6 +30,7 @@ public class ShoppingCartController {
         return service.addProductToCart(username, products);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping
     public void deactivateCart(@RequestParam String username) {
         service.deactivateCart(username);

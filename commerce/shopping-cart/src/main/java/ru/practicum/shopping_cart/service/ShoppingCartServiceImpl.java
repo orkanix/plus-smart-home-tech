@@ -7,7 +7,6 @@ import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.shopping_cart.expection.CartNotFoundException;
 import ru.practicum.shopping_cart.expection.CartWasDeactivated;
-import ru.practicum.shopping_cart.expection.NotAuthorizedUserException;
 import ru.practicum.shopping_cart.model.*;
 import ru.practicum.shopping_cart.model.mapper.CartMapper;
 import ru.practicum.shopping_cart.repository.ShoppingCartRepository;
