@@ -8,7 +8,6 @@ import ru.practicum.interaction_api.order.dto.OrderDto;
 import java.util.UUID;
 
 @FeignClient(name = "order")
-
 public interface OrderClient {
 
     String BASE_URL = "/api/v1/order";

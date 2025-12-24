@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @FeignClient(name = "payment")
-
 public interface PaymentClient {
 
     @PostMapping("/api/v1/payment")

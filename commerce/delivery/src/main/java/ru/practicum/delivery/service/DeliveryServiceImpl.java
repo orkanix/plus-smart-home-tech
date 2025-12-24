@@ -29,6 +29,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final WarehouseClient warehouseClient;
 
     private final BigDecimal BASE_DELIVERY_COST = BigDecimal.valueOf(5.0);
+    private final BigDecimal FRAGILE_RATIO = BigDecimal.valueOf(0.2);
+    private final BigDecimal WEIGHT_RATIO = BigDecimal.valueOf(0.3);
+    private final BigDecimal VOLUME_RATIO = BigDecimal.valueOf(0.2);
+    private final BigDecimal ADDRESS_RATIO = BigDecimal.valueOf(0.2);
 
     @Override
     public DeliveryDto createDelivery(DeliveryDto delivery) {
@@ -111,14 +115,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
 
         if (order.getFragile()) {
-            deliveryPrice = deliveryPrice.add(deliveryPrice.multiply(BigDecimal.valueOf(0.2)));
+            deliveryPrice = deliveryPrice.add(deliveryPrice.multiply(FRAGILE_RATIO));
         }
 
-        deliveryPrice = deliveryPrice.add(BigDecimal.valueOf(order.getDeliveryWeight()).multiply(BigDecimal.valueOf(0.3)));
-        deliveryPrice = deliveryPrice.add(BigDecimal.valueOf(order.getDeliveryVolume()).multiply(BigDecimal.valueOf(0.2)));
+        deliveryPrice = deliveryPrice.add(BigDecimal.valueOf(order.getDeliveryWeight()).multiply(WEIGHT_RATIO));
+        deliveryPrice = deliveryPrice.add(BigDecimal.valueOf(order.getDeliveryVolume()).multiply(VOLUME_RATIO));
 
         if (!delivery.getFromAddress().getStreet().equals(delivery.getToAddress().getStreet())) {
-            deliveryPrice = deliveryPrice.add(deliveryPrice.multiply(BigDecimal.valueOf(0.2)));
+            deliveryPrice = deliveryPrice.add(deliveryPrice.multiply(ADDRESS_RATIO));
         }
 
         return deliveryPrice;

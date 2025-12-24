@@ -11,7 +11,6 @@ import ru.practicum.interaction_api.order.dto.OrderDto;
 import java.math.BigDecimal;
 
 @FeignClient(name = "delivery")
-
 public interface DeliveryClient {
 
     @PutMapping("/api/v1/delivery")

@@ -1,13 +1,11 @@
 package ru.practicum.payment.service;
 
-import org.springframework.stereotype.Service;
 import ru.practicum.interaction_api.order.dto.OrderDto;
 import ru.practicum.interaction_api.payment.dto.PaymentDto;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Service
 public interface PaymentService {
 
     PaymentDto goToPayment(OrderDto order);

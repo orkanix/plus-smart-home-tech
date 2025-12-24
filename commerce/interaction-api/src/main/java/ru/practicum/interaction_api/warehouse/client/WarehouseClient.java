@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @FeignClient(name = "warehouse")
-
 public interface WarehouseClient {
 
     @PostMapping("/api/v1/warehouse/assembly")

@@ -1,6 +1,5 @@
 package ru.practicum.warehouse.service;
 
-import org.springframework.stereotype.Service;
 import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.interaction_api.warehouse.dto.AddressDto;
 import ru.practicum.interaction_api.warehouse.dto.BookedProductsDto;
@@ -13,7 +12,6 @@ import ru.practicum.interaction_api.warehouse.dto.ShippedToDeliveryRequest;
 import java.util.Map;
 import java.util.UUID;
 
-@Service
 public interface WarehouseService {
 
     ProductInWarehouseDto addNewProduct(NewProductInWarehouseRequest newProductInWarehouseRequest);

@@ -8,7 +8,6 @@ import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
 import java.util.UUID;
 
 @FeignClient(name = "shopping-store")
-
 public interface ShoppingStoreClient {
 
     @GetMapping("/api/v1/shopping-store/{productId}")
