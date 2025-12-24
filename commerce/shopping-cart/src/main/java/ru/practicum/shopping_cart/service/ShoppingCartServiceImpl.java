@@ -3,11 +3,11 @@ package ru.practicum.shopping_cart.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.interaction_api.order.exception.NotAuthorizedUserException;
 import ru.practicum.interaction_api.shopping_cart.dto.ShoppingCartDto;
 import ru.practicum.interaction_api.warehouse.client.WarehouseClient;
 import ru.practicum.shopping_cart.expection.CartNotFoundException;
 import ru.practicum.shopping_cart.expection.CartWasDeactivated;
-import ru.practicum.shopping_cart.expection.NotAuthorizedUserException;
 import ru.practicum.shopping_cart.model.*;
 import ru.practicum.shopping_cart.model.mapper.CartMapper;
 import ru.practicum.shopping_cart.repository.ShoppingCartRepository;
@@ -34,7 +34,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto addProductToCart(String username, Map<String, Integer> products) {
+    public ShoppingCartDto addProductToCart(String username, Map<UUID, Integer> products) {
         if (username == null) {
             throw new NotAuthorizedUserException("Имя пользователя не может быть пустым!");
         }
@@ -72,7 +72,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCartDto removeProductFromCart(String username, List<String> products) {
+    public ShoppingCartDto removeProductFromCart(String username, List<UUID> products) {
         if (username == null) {
             throw new NotAuthorizedUserException("Имя пользователя не может быть пустым!");
         }
@@ -97,7 +97,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 break;
             }
         }
-        client.checkQuantityForCart(CartMapper.toDto(shoppingCart));
+        client.assemblyProductForOrderFromShoppingCart(CartMapper.toDto(shoppingCart));
 
         return CartMapper.toDto(repository.save(shoppingCart));
     }
@@ -113,10 +113,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCart;
     }
 
-    private ShoppingCartEntity addProductsToCart(ShoppingCartEntity shoppingCart, Map<String, Integer> products) {
+    private ShoppingCartEntity addProductsToCart(ShoppingCartEntity shoppingCart, Map<UUID, Integer> products) {
 
-        Map<String, Integer> validProducts = new HashMap<>(products);
-        Map<String, ShoppingCartItem> itemMap = shoppingCart.getItems().stream()
+        Map<UUID, Integer> validProducts = new HashMap<>(products);
+        Map<UUID, ShoppingCartItem> itemMap = shoppingCart.getItems().stream()
                 .collect(Collectors.toMap(ShoppingCartItem::getProductId, Function.identity()));
 
         validProducts.forEach((productId, quantity) -> {

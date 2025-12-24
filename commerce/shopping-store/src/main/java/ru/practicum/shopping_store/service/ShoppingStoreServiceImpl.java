@@ -5,11 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
-import ru.practicum.shopping_store.exception.ProductNotFoundException;
+import ru.practicum.interaction_api.shopping_store.exception.ProductNotFoundException;
 import ru.practicum.shopping_store.model.*;
 import ru.practicum.shopping_store.model.mapper.ProductMapper;
 import ru.practicum.shopping_store.repository.ShoppingStoreRepository;
 import ru.practicum.interaction_api.shopping_store.dto.ProductDto;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -25,7 +27,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     }
 
     @Override
-    public ProductDto getProductById(String productId) {
+    public ProductDto getProductById(UUID productId) {
         return ProductMapper.toDto(productExists(productId));
     }
 
@@ -42,7 +44,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     }
 
     @Override
-    public Boolean removeProduct(String productId) {
+    public Boolean removeProduct(UUID productId) {
         Product product = productExists(productId);
 
         product.setProductState(ProductState.DEACTIVATE);
@@ -59,7 +61,7 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
         return true;
     }
 
-    private Product productExists(String productId) {
+    private Product productExists(UUID productId) {
         try {
             return repository.findById(productId)
                     .orElseThrow(() -> new ProductNotFoundException("Товар с id " + productId + " не найден!"));

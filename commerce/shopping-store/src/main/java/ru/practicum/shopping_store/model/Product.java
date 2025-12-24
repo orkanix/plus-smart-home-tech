@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 @Entity
 @Table(name = "shopping_store")
 @Getter
@@ -15,7 +18,7 @@ public class Product {
 
     @Id
     @UuidGenerator
-    private String productId;
+    private UUID productId;
 
     @Column(name = "product_name", nullable = false)
     private String productName;
@@ -39,5 +42,5 @@ public class Product {
     private ProductCategory productCategory;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 }
